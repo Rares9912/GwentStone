@@ -13,6 +13,7 @@ public class Card {
     private String name;
 
     public Card() {
+
     }
 
     public int getMana() {
