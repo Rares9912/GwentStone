@@ -10,6 +10,26 @@ public final class CardInput {
     private ArrayList<String> colors;
     private String name;
 
+    private boolean isFrozen;
+
+    private boolean hasAttacked;
+
+    public boolean isFrozen() {
+        return isFrozen;
+    }
+
+    public void setFrozen(boolean isFrozen) {
+        this.isFrozen = isFrozen;
+    }
+
+    public boolean hasAttacked() {
+        return hasAttacked;
+    }
+
+    public void setHasAttacked(boolean hasAttacked) {
+        this.hasAttacked = hasAttacked;
+    }
+
     public CardInput() {
     }
 
@@ -60,6 +80,7 @@ public final class CardInput {
     public void setName(final String name) {
         this.name = name;
     }
+
 
     @Override
     public String toString() {
