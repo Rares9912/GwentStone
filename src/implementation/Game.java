@@ -124,6 +124,9 @@ public class Game {
                             turnNumber = 0;
                             roundNumber++;
 
+                            playerOneHero.setHasAttacked(false);
+                            playerTwoHero.setHasAttacked(false);
+
                             for (int k = 0; k < gameTable.size(); k++) {
                                 for (int l = 0; l < gameTable.get(k).size(); l++) {
                                     if (gameTable.get(k).get(l).hasAttacked()) {
@@ -1012,6 +1015,189 @@ public class Game {
                             }
                         }
                         break;
+                    }
+
+                    case "useHeroAbility": {
+                        int playerTurn = input.getGames().get(i).getStartGame().getStartingPlayer();
+                        int affectedRow = input.getGames().get(i).getActions().get(j).getAffectedRow();
+
+                        switch (playerTurn) {
+                            case 1: {
+                                if (playerOneMana < playerOneHero.getMana()) {
+                                    ObjectNode node = output.addObject();
+                                    node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                    node.put("affectedRow", affectedRow);
+                                    node.put("error", "Not enough mana to use hero's ability.");
+                                    break;
+                                } else if (playerOneHero.hasAttacked()) {
+                                    ObjectNode node = output.addObject();
+                                    node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                    node.put("affectedRow", affectedRow);
+                                    node.put("error", "Hero has already attacked this turn.");
+                                    break;
+                                }
+
+                                String heroName = playerOneHero.getName();
+
+                                if (heroName.equals("Lord Royce") || heroName.equals("Empress Thorina")) {
+                                    if (affectedRow == 2 || affectedRow == 3) {
+                                        ObjectNode node = output.addObject();
+                                        node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                        node.put("affectedRow", affectedRow);
+                                        node.put("error", "Selected row does not belong to the enemy.");
+                                        break;
+                                    }
+                                } else if (affectedRow == 0 || affectedRow == 1) {
+                                    ObjectNode node = output.addObject();
+                                    node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                    node.put("affectedRow", affectedRow);
+                                    node.put("error", "Selected row does not belong to the current player.");
+                                    break;
+                                }
+
+                                playerOneMana = playerOneMana - playerOneHero.getMana();
+                                playerOneHero.setHasAttacked(true);
+
+                                switch (heroName) {
+                                    case "Lord Royce": {
+                                        int maxAttack = 0;
+                                        int maxAttackIndex = 0;
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            if (gameTable.get(affectedRow).get(k).getAttackDamage() > maxAttack) {
+                                                maxAttack = gameTable.get(affectedRow).get(k).getAttackDamage();
+                                                maxAttackIndex = k;
+                                            }
+                                        }
+                                        if (!gameTable.get(affectedRow).get(maxAttackIndex).isFrozen()) {
+                                            gameTable.get(affectedRow).get(maxAttackIndex).setFrozen(true);
+                                        }
+                                        break;
+                                    }
+
+                                    case "Empress Thorina": {
+                                        int maxHealth = 0;
+                                        int maxHealthIndex = 0;
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            if (gameTable.get(affectedRow).get(k).getHealth() > maxHealth) {
+                                                maxHealth = gameTable.get(affectedRow).get(k).getHealth();
+                                                maxHealthIndex = k;
+                                            }
+                                        }
+
+                                        gameTable.set(affectedRow,
+                                                commands.removeCardFromRow(
+                                                        gameTable.get(affectedRow),
+                                                        maxHealthIndex));
+                                        break;
+                                    }
+
+                                    case "King Mudface": {
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            gameTable.get(affectedRow).get(k).setHealth
+                                                    (gameTable.get(affectedRow).get(k).getHealth() + 1);
+                                        }
+                                        break;
+                                    }
+
+                                    case "General Kocioraw": {
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            gameTable.get(affectedRow).get(k).setAttackDamage
+                                                    (gameTable.get(affectedRow).get(k).getAttackDamage() + 1);
+                                        }
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+
+                            case 2: {
+                                if (playerTwoMana < playerTwoHero.getMana()) {
+                                    ObjectNode node = output.addObject();
+                                    node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                    node.put("affectedRow", affectedRow);
+                                    node.put("error", "Not enough mana to use hero's ability.");
+                                    break;
+                                } else if (playerTwoHero.hasAttacked()) {
+                                    ObjectNode node = output.addObject();
+                                    node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                    node.put("affectedRow", affectedRow);
+                                    node.put("error", "Hero has already attacked this turn.");
+                                    break;
+                                }
+
+                                String heroName = playerTwoHero.getName();
+
+                                if (heroName.equals("Lord Royce") || heroName.equals("Empress Thorina")) {
+                                    if (affectedRow == 0 || affectedRow == 1) {
+                                        ObjectNode node = output.addObject();
+                                        node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                        node.put("affectedRow", affectedRow);
+                                        node.put("error", "Selected row does not belong to the enemy.");
+                                        break;
+                                    }
+                                } else if (affectedRow == 2 || affectedRow == 3) {
+                                    ObjectNode node = output.addObject();
+                                    node.put("command", input.getGames().get(i).getActions().get(j).getCommand());
+                                    node.put("affectedRow", affectedRow);
+                                    node.put("error", "Selected row does not belong to the current player.");
+                                    break;
+                                }
+
+                                playerTwoMana = playerTwoMana - playerTwoHero.getMana();
+                                playerTwoHero.setHasAttacked(true);
+
+                                switch (heroName) {
+                                    case "Lord Royce": {
+                                        int maxAttack = 0;
+                                        int maxAttackIndex = 0;
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            if (gameTable.get(affectedRow).get(k).getAttackDamage() > maxAttack) {
+                                                maxAttack = gameTable.get(affectedRow).get(k).getAttackDamage();
+                                                maxAttackIndex = k;
+                                            }
+                                        }
+                                        if (!gameTable.get(affectedRow).get(maxAttackIndex).isFrozen()) {
+                                            gameTable.get(affectedRow).get(maxAttackIndex).setFrozen(true);
+                                        }
+                                        break;
+                                    }
+
+                                    case "Empress Thorina": {
+                                        int maxHealth = 0;
+                                        int maxHealthIndex = 0;
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            if (gameTable.get(affectedRow).get(k).getHealth() > maxHealth) {
+                                                maxHealth = gameTable.get(affectedRow).get(k).getHealth();
+                                                maxHealthIndex = k;
+                                            }
+                                        }
+
+                                        gameTable.set(affectedRow,
+                                                commands.removeCardFromRow(
+                                                        gameTable.get(affectedRow),
+                                                        maxHealthIndex));
+                                        break;
+                                    }
+
+                                    case "King Mudface": {
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            gameTable.get(affectedRow).get(k).setHealth
+                                                    (gameTable.get(affectedRow).get(k).getHealth() + 1);
+                                        }
+                                        break;
+                                    }
+
+                                    case "General Kocioraw": {
+                                        for (int k = 0; k < gameTable.get(affectedRow).size(); k++) {
+                                            gameTable.get(affectedRow).get(k).setAttackDamage
+                                                    (gameTable.get(affectedRow).get(k).getAttackDamage() + 1);
+                                        }
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
                     }
                 }
             }
