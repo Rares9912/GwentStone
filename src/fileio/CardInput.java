@@ -18,7 +18,7 @@ public final class CardInput {
         return isFrozen;
     }
 
-    public void setFrozen(boolean isFrozen) {
+    public void setFrozen(final boolean isFrozen) {
         this.isFrozen = isFrozen;
     }
 
@@ -26,11 +26,30 @@ public final class CardInput {
         return hasAttacked;
     }
 
-    public void setHasAttacked(boolean hasAttacked) {
+    public void setHasAttacked(final boolean hasAttacked) {
         this.hasAttacked = hasAttacked;
     }
 
     public CardInput() {
+    }
+
+    public CardInput(final int mana, final int attackDamage, final int health,
+                     final String description, final ArrayList<String> colors,
+                     final String name, final boolean isFrozen, final boolean hasAttacked) {
+        this.mana = mana;
+        this.attackDamage = attackDamage;
+        this.health = health;
+        this.description = description;
+        this.colors = colors;
+        this.name = name;
+        this.isFrozen = isFrozen;
+        this.hasAttacked = hasAttacked;
+    }
+
+    public CardInput(final CardInput cardInput) {
+        this(cardInput.getMana(), cardInput.getAttackDamage(), cardInput.getHealth(),
+                cardInput.getDescription(), cardInput.getColors(), cardInput.getName(),
+                cardInput.isFrozen(), cardInput.hasAttacked());
     }
 
     public int getMana() {
