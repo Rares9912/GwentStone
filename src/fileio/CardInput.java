@@ -46,6 +46,8 @@ public final class CardInput {
         this.hasAttacked = hasAttacked;
     }
 
+    /** Copy Constructor */
+
     public CardInput(final CardInput cardInput) {
         this(cardInput.getMana(), cardInput.getAttackDamage(), cardInput.getHealth(),
                 cardInput.getDescription(), cardInput.getColors(), cardInput.getName(),

@@ -4,14 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import fileio.ActionsInput;
-import fileio.CardInput;
 
-import java.util.ArrayList;
+public class GetPlayerDeck {
+    public GetPlayerDeck(final Game game, final ActionsInput action, final ArrayNode output,
+                         final CommandsImplementation commands, final ObjectMapper mapper) {
 
-public class getPlayerDeck {
-    public getPlayerDeck(ActionsInput action, ArrayNode output, CommandsImplementation commands,
-                         ArrayList<CardInput> playerOneDeck, ArrayList<CardInput> playerTwoDeck,
-                         ObjectMapper mapper) {
         String command = action.getCommand();
         int playerIdx = action.getPlayerIdx();
         ObjectNode node = output.addObject();
@@ -20,9 +17,9 @@ public class getPlayerDeck {
         ArrayNode result = node.putArray("output");
 
         if (playerIdx == 2) {
-            commands.writeDeck(playerTwoDeck, result, mapper);
+            commands.writeDeck(game.getPlayerTwoDeck(), result, mapper);
         } else {
-            commands.writeDeck(playerOneDeck, result, mapper);
+            commands.writeDeck(game.getPlayerOneDeck(), result, mapper);
         }
     }
 }
