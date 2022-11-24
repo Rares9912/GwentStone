@@ -204,17 +204,14 @@ public final class Game {
 
                     case "getCardsOnTable" -> {
                         new GetCardsOnTable(this, action, output, commands, mapper);
-
                     }
 
                     case "getEnvironmentCardsInHand" -> {
                         new GetEnvironmentCardsInHand(this, action, output, commands, mapper);
-
                     }
 
                     case "useEnvironmentCard" -> {
                         new UseEnvironmentCard(this, startGame, action, output, commands);
-
                     }
 
                     case "getCardAtPosition" -> {
@@ -240,7 +237,6 @@ public final class Game {
 
                     case "useHeroAbility" -> {
                         new UseHeroAbility(this, startGame, action, output, commands);
-
                     }
 
                     case "getPlayerOneWins" -> {
@@ -249,7 +245,6 @@ public final class Game {
 
                     case "getPlayerTwoWins" -> {
                         new GetPlayerTwoWins(this, action, output);
-
                     }
 
                     case "getTotalGamesPlayed" -> {

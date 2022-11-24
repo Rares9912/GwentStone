@@ -106,6 +106,7 @@ public class CardUsesAttack {
                     }
                 }
             }
+
             if (!isError) {
                 game.getGameTable().get(cardAttackedCoord.getX()).set(cardAttackedCoord.getY(),
                         commands.attackCard(cardAttacker, cardAttacked));
